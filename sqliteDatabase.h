@@ -14,7 +14,7 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 
 
 int data() {
-	sqlite3* db;
+	sqlite3* db; //This is the database object
 	char* errMsg = 0;
 	int rc; //Variable used to open and create your database file
 	const char* sql; //Variable used to create you sql tables
@@ -31,13 +31,21 @@ int data() {
 	}
 
 	//Create the table
-	sql = "CREAT TABLE USERS(" \
+	sql = "CREATE TABLE USERS(" \
 		"ID	INTEGER	PRIMARY KEY	AUTOINCREMENT,"	\
 		"Username	TEXT	NOT NULL,"	\
 		"First_Name	TEXT	NOT NULL,"	\
 		"Last_Name	TEXT	NOT NULL,"	\
-		"Password	TEXT	NOT	NULL,"
+		"Password	TEXT	NOT	NULL);";
 
+	//Execute SQL statement
+	rc = sqlite3_exec(db, sql, callback, 0, &errMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", errMsg);
+	}
+	else {
+		fprintf(stdout, "Table successfully created");
+	}
 
 	sqlite3_close(db);
 }
