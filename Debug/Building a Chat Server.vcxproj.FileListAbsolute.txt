@@ -1,0 +1,2 @@
+C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Debug\Building a Chat Server.exe
+C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Debug\Building a Chat Server.pdb

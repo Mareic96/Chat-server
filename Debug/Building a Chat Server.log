@@ -1,0 +1,5 @@
+﻿  Main.cpp
+C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\sqliteDatabase.h(12,14): warning C4101: 'sql': unreferenced local variable
+C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Main.cpp(15,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\sqliteDatabase.h(27): warning C4715: 'data': not all control paths return a value
+  Building a Chat Server.vcxproj -> C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Debug\Building a Chat Server.exe
