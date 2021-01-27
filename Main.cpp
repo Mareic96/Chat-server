@@ -12,7 +12,7 @@ int main() {
 	string lastName;
 	string passWord;
 
-	srand(time(0));
+	srand((signed)time(0));
 	int i = rand();
 	string identification = std::to_string (i);
 
@@ -29,9 +29,10 @@ int main() {
 		Username user(firstName, lastName, passWord, i, firstName + identification);
 		string username = user.getUser();
 		cout << username + "\n";
+		data(username, firstName, lastName, passWord);
 	}
 
-	data();
+	
 	
 	
 
