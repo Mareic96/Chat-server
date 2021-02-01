@@ -66,3 +66,40 @@ int data(std::string username, std::string firstName, std::string lastName, std:
 }
 //delete from USERS then
 //delete from sqlite_sequence where name = 'your_table_name'
+
+int check(std::string username, std::string password) {
+	sqlite3* db;
+	char* errMsg = 0;
+	int rc;
+	std::string sql;
+	sqlite3_stmt* stmt = 0;
+
+	rc = sqlite3_open("User Information.db", &db);
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		return (0);
+	}
+	else {
+		fprintf(stderr, "Opended database successfully\n");
+	}
+
+	//checking user details
+	sql = "SELECT * from USERS where Username = ? and Password = ?";
+	int result = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, username.c_str(), username.length(), NULL);
+	sqlite3_bind_text(stmt, 2, password.c_str(), password.length(), NULL);
+
+	if (result == SQLITE_OK) {
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			fprintf(stdout, "User account found\n");
+			fprintf(stdout, "Hello %s\n", sqlite3_column_text(stmt, 2));
+		}
+		else {
+			fprintf(stdout, "User account not found");
+		}
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+
+}

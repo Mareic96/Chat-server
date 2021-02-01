@@ -4,12 +4,8 @@ using std::string;
 #include <iostream>
 using std::cout;
 
-Registration::Registration(string first, string last, string pass, int id) :firstName(first), lastName(last), password(pass), idNumber(id){}
+Registration::Registration(string first, string last, string pass) :firstName(first), lastName(last), password(pass){}
 
 string Registration::getName() {
 	return firstName + " " + lastName;
-}
-
-int Registration::getNumber() {
-	return idNumber;
 }

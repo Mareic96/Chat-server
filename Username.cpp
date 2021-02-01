@@ -3,7 +3,7 @@
 #include <string>
 using std::string;
 
-Username::Username(string first, string last, string pass, int id, string tag) : Registration(first, last, pass, id), user(tag) {};
+Username::Username(string first, string last, string pass, string tag) : Registration(first, last, pass), user(tag) {};
 
 string Username::getUser() {
 	return user;

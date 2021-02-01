@@ -6,9 +6,8 @@ private:
 	std::string firstName;
 	std::string lastName;
 	std::string password;
-	int idNumber;
+	
 public:
-	Registration(std::string first, std::string last, std::string pass, int id);
+	Registration(std::string first, std::string last, std::string pass);
 	std::string getName();
-	int getNumber();
 };
