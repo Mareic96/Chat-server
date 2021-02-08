@@ -7,20 +7,21 @@ using std::cin;
 #include <ctime>
 using std::time;
 
+
 void registration(string firstName, string lastName, string password, string identification) {
 	cout << "Please enter your first name and then press enter: ";
-	cin >> firstName;
-	cout << "\n";
-	cout << "Please enter your last name and then press enter: ";
-	cin >> lastName;
-	cout << "Please enter your password and press enter: ";
-	cin >> password;
+	std::cin >> firstName;
+	std::cout << "\n";
+	std::cout << "Please enter your last name and then press enter: ";
+	std::cin >> lastName;
+	std::cout << "Please enter your password and press enter: ";
+	std::cin >> password;
 
 	Registration p1(firstName, lastName, password);
 	{
 		Username user(firstName, lastName, password, firstName + identification);
 		string username = user.getUser();
-		cout << username + "\n";
+		std::cout << username + "\n";
 		data(username, firstName, lastName, password);
 	}
 }
@@ -30,10 +31,10 @@ void registration(string firstName, string lastName, string password, string ide
 string login(string username, string password) {
 	bool again = true;
 	while (again == true) {
-		cout << "Please enter your username: ";
-		cin >> username;
-		cout << "Please enter your password and press enter: ";
-		cin >> password;
+		std::cout << "Please enter your username: ";
+		std::cin >> username;
+		std::cout << "Please enter your password and press enter: ";
+		std::cin >> password;
 		if (login_check(username, password)) {
 			again = false;
 		}
@@ -41,42 +42,78 @@ string login(string username, string password) {
 	return username;
 }
 
-string reciever() {
-	//Do you want to read or write a message. Make a wrap around with an if statement
+//string reciever() {
+//	//Do you want to read or write a message. Make a wrap around with an if statement
+//	string recieverName;
+//	bool found = true;
+//	char readOrWrite;
+//	std::cout << "Type 'R' if you would like to read a message or type 'W' if you would like to write a message: ";
+//	std::cin >> readOrWrite;
+//	while (found) {
+//		if (readOrWrite == 'W' || readOrWrite == 'w') {
+//			std::cout << "Who do you want to send the message to? ";
+//			std::cin >> recieverName;
+//			if (check(recieverName) == true) {
+//				std::cout << "User account found\n";
+//				found = false;
+//			}
+//			else {
+//				std::cout << "User account not found, please try again\n";
+//			}
+//		}
+//
+//		if (readOrWrite == 'R' || readOrWrite == 'r') {
+//			std::cout << "Whose message do you want to read? ";
+//			std::cin >> recieverName;
+//			if (check(recieverName) == true) {
+//				std::cout << "User account found\n";
+//				found = false;
+//			}
+//			else {
+//				std::cout << "User account not found, please try again\n";
+//			}
+//		}
+//	}
+//	return recieverName;
+//}
+
+string writeMessages() {
 	string recieverName;
 	bool found = true;
 	char readOrWrite;
-	cout << "Type 'R' if you would like to read a message or type 'W' if you would like to write a message: ";
-	cin >> readOrWrite;
 	while (found) {
-		if (readOrWrite == 'W' || readOrWrite == 'w') {
-			cout << "Who do you want to send the message to? ";
-			cin >> recieverName;
-			if (check(recieverName) == true) {
-				cout << "User account found\n";
-				found = false;
-			}
-			else {
-				cout << "User account not found, please try again\n";
-			}
+		std::cout << "Who do you want to send the message to? ";
+		std::cin >> recieverName;
+		if (check(recieverName) == true) {
+			std::cout << "User account found\n";
+			found = false;
 		}
-
-		if (readOrWrite == 'R' || readOrWrite == 'r') {
-			cout << "Whose message do you want to read? ";
-			cin >> recieverName;
-			if (check(recieverName) == true) {
-				cout << "User account found\n";
-				found = false;
-			}
-			else {
-				cout << "User account not found, please try again\n";
-			}
+		else {
+			std::cout << "User account not found, please try again\n";
 		}
 	}
+
 	return recieverName;
 }
 
+string readMessages() {
+	string recieverName;
+	bool found = true;
+	char readOrWrite;
+	std::cout << "Whose message do you want to read? ";
+	std::cin >> recieverName;
+	while (found) {
+		if (check(recieverName) == true) {
+			std::cout << "User account found\n";
+			found = false;
+		}
+		else {
+			std::cout << "User account not found, please try again\n";
+		}
+	}
 
+	return recieverName;
+}
 
 
 
@@ -87,19 +124,18 @@ int main() {
 	char currentUser;
 	string username;
 	string message;
+	char readOrWrite;
+	string senderName;
+	string recieverName;
 	
 
 	srand((signed)time(0));
 	int i = rand();
 	string identification = std::to_string (i);
 
-	//Call the create messages table
-	//create_messages();
-	//Call the create users table 
-	string senderName;
 
-	cout << "Do you already have an account? [Y/N]";
-	cin >> currentUser;
+	std::cout << "Do you already have an account? [Y/N]";
+	std::cin >> currentUser;
 	if (currentUser == 'Y' || currentUser == 'y') {
 		senderName = login(username, password);
 	}
@@ -109,15 +145,20 @@ int main() {
 
 
 	//Do you want to read or write a message. Make a wrap around with an if statement
-	string recieverName = reciever();
+	std::cout << "Type 'R' if you would like to read a message or type 'W' if you would like to write a message: ";
+	std::cin >> readOrWrite;
+	if (readOrWrite == 'W' || readOrWrite == 'w') {
+		recieverName = writeMessages();
+		std::cout << "You can now write your message: ";
+		std::cin.ignore(1, '\n');
+		std::getline(std::cin, message);
+		store_message(senderName, recieverName, message);
+	}
+	if (readOrWrite == 'R' || readOrWrite == 'r') {
+		recieverName = readMessages();
+		read_messages(senderName, recieverName);
+	}
 
-
-
-	/*cout << "You can now write your message: ";
-	cin >> message;
-	store_message(senderName, recieverName, message);
-	
-	read_messages(senderName, recieverName);*/
 
 	
 	return 0;
