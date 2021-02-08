@@ -59,21 +59,22 @@ int data(std::string username, std::string firstName, std::string lastName, std:
 		fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
 	}
 	else {
-		fprintf(stdout, "Data successfully added to the table");
+		fprintf(stdout, "Data successfully added to the table\n");
 	}
 
+	sqlite3_finalize(stmt);
 	sqlite3_close(db);
 }
 //delete from USERS then
 //delete from sqlite_sequence where name = 'your_table_name'
 
-int check(std::string username, std::string password) {
+bool login_check(std::string username, std::string password) {
 	sqlite3* db;
 	char* errMsg = 0;
 	int rc;
 	std::string sql;
 	sqlite3_stmt* stmt = 0;
-
+	bool authentication = false;
 	rc = sqlite3_open("User Information.db", &db);
 	if (rc) {
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -93,13 +94,172 @@ int check(std::string username, std::string password) {
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			fprintf(stdout, "User account found\n");
 			fprintf(stdout, "Hello %s\n", sqlite3_column_text(stmt, 2));
+			authentication = true;
 		}
 		else {
-			fprintf(stdout, "User account not found");
+			fprintf(stdout, "User account not found. Username or password do not match, please try again\n");
 		}
+	}
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return authentication;
+
+}
+
+bool check(std::string reciever) {
+	sqlite3* db;
+	char errMsg = 0;
+	std::string sql;
+	int rc = 0;
+	sqlite3_stmt* stmt = 0;
+	bool match = false;
+
+	rc = sqlite3_open("User Information.db", &db);
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		return (0);
+	}
+	else {
+		fprintf(stderr, "Opended database successfully\n");
+	}
+
+	//check whether the reciever's username exists
+	sql = "SELECT * FROM USERS WHERE Username = ?";
+	int result = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, reciever.c_str(), reciever.length(), NULL);
+	
+	if (result == SQLITE_OK) {
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			fprintf(stdout, "Reciever found\n");
+			fprintf(stdout, "You may now send a message to %s\n", sqlite3_column_text(stmt, 2));
+			match = true;
+		}
+	}
+	else {
+		fprintf(stdout, "Username is not found. Please try again");
 	}
 
 	sqlite3_finalize(stmt);
 	sqlite3_close(db);
-
+	return match;
 }
+
+// Let them add the message first
+// Make sure the functions only do one thing, don't worry about other things
+
+int create_messages() {
+	sqlite3* db;
+	char* errMsg = 0;
+	int rc;
+	std::string sql;
+	
+
+	rc = sqlite3_open("Messages.db", &db);
+
+	if (rc) {
+		fprintf(stderr, "Can't open database %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Opneded database successfully created\n");
+	}
+
+	sql = "CREATE TABLE IF NOT EXISTS MESSAGES("	\
+		"ID	INTEGER	PRIMARY KEY	NOT NULL, "	\
+		"Sender		TEXT	NOT NULL,"	\
+		"Reciever	TEXT	NOT NULL,"	\
+		"Content	TEXT	NOT NULL);";
+
+	rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
+
+	if (rc != SQLITE_DONE) {
+		fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Data successfully added to the table\n");
+	}
+
+	sqlite3_close(db);
+	return 0;
+}
+
+int store_message(std::string sender, std::string reciever, std::string content) {
+	sqlite3* db;
+	char* errMsg = 0;
+	int rc;
+	std::string sql;
+	sqlite3_stmt* stmt = 0;
+
+	rc = sqlite3_open("Messages.db", &db);
+	if (rc) {
+		fprintf(stderr, "Can't open database %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Opended database successfully created\n");
+	}
+
+	/*sql = "CREATE TABLE MESSAGES("	\
+		"ID	INTEGER	PRIMARY KEY	NOT NULL, "	\
+		"Sender		TEXT	NOT NULL,"	\
+		"Reciever	TEXT	NOT NULL,"	\
+		"Content	TEXT	NOT NULL);";*/
+
+	//rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
+
+	sql = "INSERT INTO MESSAGES(Sender, Reciever, Content)"	\
+		"VALUES(?, ?, ?);";
+	
+
+	rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, sender.c_str(), sender.length(), NULL);
+	sqlite3_bind_text(stmt, 2, reciever.c_str(), reciever.length(), NULL);
+	sqlite3_bind_text(stmt, 3, content.c_str(), content.length(), NULL);
+	rc = sqlite3_step(stmt);
+	
+	
+
+	if (rc != SQLITE_DONE) {
+		fprintf(stderr, "SQL error (%d): %s\n", rc, sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Message sent\n");
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return 0;
+}
+
+int read_messages(std::string sender, std::string reciever) {
+	sqlite3* db;
+	char errMsg = 0;
+	int rc;
+	std::string sql;
+	sqlite3_stmt* stmt = 0;
+
+	rc = sqlite3_open("Messages.db", &db);
+	if (rc) {
+		fprintf(stderr, "Can't open database %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Database opened");
+	}
+
+	sql = "SELECT * FROM MESSAGES WHERE Sender = ? and Reciever = ?";
+
+	rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, sender.c_str(), sender.length(), NULL);
+	sqlite3_bind_text(stmt, 2, reciever.c_str(), reciever.length(), NULL);
+	rc = sqlite3_step(stmt);
+
+	if (rc != SQLITE_DONE) {
+		fprintf(stderr, "SQL error (%d): %s\n", rc, sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Messages Opened");
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return 0;
+}
+
