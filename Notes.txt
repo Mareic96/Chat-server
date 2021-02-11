@@ -35,3 +35,18 @@ string readMessages() {
 	
 	return recieverName;
 }
+
+/*Read Receipts*/
+//Maybe write a another database function to count the amount of messages
+//The database function can take one argument, this can be just the username
+int read_receipts(senderName){
+	sqlite3* db;
+	char* errMsg = 0;
+	int rc;
+	sqlite3_stmt* stmt = 0;
+	
+	rc = sqlite3_open("Messages.db", &db);
+	//if statment to check if database opens
+	//maybe use int sqlite3_column_count(stmt); // This should return the number of columns in the result
+	
+}
