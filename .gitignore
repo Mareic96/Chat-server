@@ -1,5 +1,5 @@
-.vs
 *.dll
 *.exe
 Debug
+.vs/
 Messages before alter.db
