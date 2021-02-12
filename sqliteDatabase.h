@@ -13,6 +13,46 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 }
 
 
+int users_table() {
+	sqlite3* db; //This is the database object
+	char* errMsg = 0;
+	int rc; //Variable used to open and create your database file
+	std::string sql; //Variable used to create you sql tables
+	sqlite3_stmt* stmt = 0;
+
+	rc = sqlite3_open("User Information.db", &db);
+
+	//Checks if the file has been created and if not, it creates one 
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stderr, "Opended database successfully\n");
+	}
+	
+	//creat table if it doesn't exist
+	sql = "CREATE TABLE IF NOT EXIST USERS("\
+		"ID	INTEGER	PRIMARY KEY	AUTOINCREMENT,"	\
+		"Username	TEXT	NOT NULL,"	\
+		"First_Name	TEXT	NOT NULL,"	\
+		"Last_Name	TEXT	NOT NULL,"	\
+		"Password	TEXT	NOT	NULL);";
+
+
+	//Execute SQL statement
+	rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
+
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Table created successfully\n");
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return 0;
+}
 
 int data(std::string username, std::string firstName, std::string lastName, std::string password) {
 	sqlite3* db; //This is the database object
@@ -48,7 +88,7 @@ int data(std::string username, std::string firstName, std::string lastName, std:
 	//rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
 
 	rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
-	sqlite3_bind_text(stmt, 1, username.c_str(), username.length(), 0);
+	sqlite3_bind_text(stmt, 1, username.c_str(), username.length(), NULL);
 	sqlite3_bind_text(stmt, 2, firstName.c_str(), firstName.length(), NULL);
 	sqlite3_bind_text(stmt, 3, lastName.c_str(), lastName.length(), NULL);
 	sqlite3_bind_text(stmt, 4, password.c_str(), password.length(), NULL);
@@ -67,6 +107,8 @@ int data(std::string username, std::string firstName, std::string lastName, std:
 }
 //delete from USERS then
 //delete from sqlite_sequence where name = 'your_table_name'
+
+//create table if not exist 'name of table';
 
 bool login_check(std::string username, std::string password) {
 	sqlite3* db;
@@ -143,6 +185,47 @@ bool check(std::string reciever) {
 	return match;
 }
 
+int message_table() {
+	sqlite3* db; //This is the database object
+	char* errMsg = 0;
+	int rc; //Variable used to open and create your database file
+	std::string sql; //Variable used to create you sql tables
+	sqlite3_stmt* stmt = 0;
+
+	rc = sqlite3_open("Messages.db", &db);
+
+	//Checks if the file has been created and if not, it creates one 
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stderr, "Opended database successfully\n");
+	}
+
+	//creat table if it doesn't exist
+	sql = "CREATE TABLE IF NOT EXIST MESSAGES("	\
+		"ID	INTEGER	PRIMARY KEY	NOT NULL, "	\
+		"Sender		TEXT	NOT NULL,"	\
+		"Reciever	TEXT	NOT NULL,"	\
+		"Content	TEXT	NOT NULL);";
+
+	rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
+
+
+	//Execute SQL statement
+	rc = sqlite3_exec(db, sql.c_str(), callback, 0, &errMsg);
+
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Table created successfully\n");
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return 0;
+}
 
 int store_message(std::string sender, std::string reciever, std::string content) {
 	sqlite3* db;
@@ -235,7 +318,7 @@ int read_messages(std::string sender, std::string reciever) {
 	return 0;
 }
 
-int read_receipts(std::string sender) {
+int message_count(std::string sender) {
 	sqlite3* db;
 	char* errMsg = 0;
 	std::string sql;
@@ -272,3 +355,5 @@ int read_receipts(std::string sender) {
 	
 	return rowcount;
 }
+
+//alter table MESSAGES add Receipt TEXT;

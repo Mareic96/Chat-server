@@ -98,6 +98,11 @@ int main() {
 	int i = rand();
 	string identification = std::to_string (i);
 
+	//Creat_users_table();
+	users_table();
+	//Create_messages_table();
+	message_table();
+	//write another function add_read_receipt_column();
 
 	cout << "Do you already have an account? [Y/N]";
 	cin >> currentUser;
@@ -120,7 +125,7 @@ int main() {
 		store_message(senderName, recieverName, message);
 	}
 	if (readOrWrite == 'R' || readOrWrite == 'r') {
-		read_receipts(senderName);
+		message_count(senderName);
 		recieverName = readMessages();
 		read_messages(senderName, recieverName);
 		//Maybe write another database function to count the amount of messages.
