@@ -1,5 +1,0 @@
-﻿  Main.cpp
-C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Main.cpp(83,7): warning C4101: 'readOrWrite': unreferenced local variable
-C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Main.cpp(102,7): warning C4101: 'readOrWrite': unreferenced local variable
-C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\sqliteDatabase.h(67): warning C4715: 'data': not all control paths return a value
-  Building a Chat Server.vcxproj -> C:\Users\613295336\OneDrive - BT Plc\Documents\Practise\C++\Building a Chat Server\Debug\Building a Chat Server.exe
