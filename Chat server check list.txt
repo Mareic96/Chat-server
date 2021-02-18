@@ -1,18 +1,14 @@
-Registration:
-- If a new user, allow them to enter their first and last name
-- Allow new user to create a password
-- Create a random number to identifiy the user
-- Create their username based on their first name and identification number
-- save details in file for login purposes
-
-Login:
-
-- Allow the user to login with their username and password
 
 
-- And they are expecting full time project, will I still have time to go throught the engineering module part time and workload 
-- What is expected from 
+Python Client, C++ Webserver
 
+Set hyperv
+Install all python essentials in ubuntu
 
-When it was sent
-If it was read, therefore show the newest
+Write the flask python code:
+	from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'

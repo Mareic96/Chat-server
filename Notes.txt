@@ -48,5 +48,6 @@ int read_receipts(senderName){
 	rc = sqlite3_open("Messages.db", &db);
 	//if statment to check if database opens
 	//maybe use int sqlite3_column_count(stmt); // This should return the number of columns in the result
-	
 }
+
+//if they open their messages, tick or notify they have read what is already on the database

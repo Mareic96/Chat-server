@@ -62,7 +62,7 @@ string writeMessages() {
 	return recieverName;
 }
 
-string readMessages() {
+string receiverCheck() {
 	string recieverName;
 	bool found = true;
 	while (found) {
@@ -103,6 +103,7 @@ int main() {
 	//Create_messages_table();
 	message_table();
 	//write another function add_read_receipt_column();
+	message_table_edit();
 
 	cout << "Do you already have an account? [Y/N]";
 	cin >> currentUser;
@@ -126,9 +127,10 @@ int main() {
 	}
 	if (readOrWrite == 'R' || readOrWrite == 'r') {
 		message_count(senderName);
-		recieverName = readMessages();
+		//Show the pending messages?
+		recieverName = receiverCheck();
 		read_messages(senderName, recieverName);
-		//Maybe write another database function to count the amount of messages.
+		read_receipt(recieverName);
 	}
 
 
