@@ -301,12 +301,16 @@ int store_message(std::string sender, std::string reciever, std::string content)
 	return 0;
 }
 
-int read_messages(std::string sender, std::string reciever) {
+string read_messages(std::string sender, std::string reciever) {
 	sqlite3* db;
 	char* errMsg = 0;
 	int rc;
 	std::string sql;
 	sqlite3_stmt* stmt = 0;
+	std::string m;
+
+	fprintf(stdout, "%s\n", sender.c_str());
+	fprintf(stdout, "%s\n", reciever.c_str());
 
 	rc = sqlite3_open("Messages.db", &db);
 	if (rc) {
@@ -326,17 +330,18 @@ int read_messages(std::string sender, std::string reciever) {
 	if (rc == SQLITE_OK) {
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
 
-			std::string m = std::string(reinterpret_cast <char*>(const_cast <unsigned char*> (sqlite3_column_text(stmt, 3))));
+			m = std::string(reinterpret_cast <char*>(const_cast <unsigned char*> (sqlite3_column_text(stmt, 3))));
 			fprintf(stdout,"%s\n", m.c_str());
 		}
 	}
 	else {
-		fprintf(stderr, "fail");
+		fprintf(stderr, "fail%d\n", rc);
+		fprintf(stderr, "%s\n", sqlite3_errmsg(db));
 	}
 
 	sqlite3_finalize(stmt);
 	sqlite3_close(db);
-	return 0;
+	return m;
 }
 
 int read_receipt(std::string receiver) {
