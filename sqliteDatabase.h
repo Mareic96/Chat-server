@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<sqlite3.h>
 #include<string>
+#include<vector>
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 	for (int i = 0; i < argc; i++) {
@@ -301,16 +302,13 @@ int store_message(std::string sender, std::string reciever, std::string content)
 	return 0;
 }
 
-string read_messages(std::string sender, std::string reciever) {
+/*string read_messages(std::string sender, std::string reciever) {
 	sqlite3* db;
 	char* errMsg = 0;
 	int rc;
 	std::string sql;
 	sqlite3_stmt* stmt = 0;
 	std::string m;
-
-	fprintf(stdout, "%s\n", sender.c_str());
-	fprintf(stdout, "%s\n", reciever.c_str());
 
 	rc = sqlite3_open("Messages.db", &db);
 	if (rc) {
@@ -332,6 +330,48 @@ string read_messages(std::string sender, std::string reciever) {
 
 			m = std::string(reinterpret_cast <char*>(const_cast <unsigned char*> (sqlite3_column_text(stmt, 3))));
 			fprintf(stdout,"%s\n", m.c_str());
+		}
+	}
+	else {
+		fprintf(stderr, "fail%d\n", rc);
+		fprintf(stderr, "%s\n", sqlite3_errmsg(db));
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+	return m;
+}*/
+
+std::vector<string> read_messages(std::string sender, std::string reciever) {
+	sqlite3* db;
+	char* errMsg = 0;
+	int rc;
+	std::string sql;
+	sqlite3_stmt* stmt = 0;
+	std::string a;
+	std::vector<string> m;
+
+	rc = sqlite3_open("Messages.db", &db);
+	if (rc) {
+		fprintf(stderr, "Can't open database %s\n", sqlite3_errmsg(db));
+	}
+	else {
+		fprintf(stdout, "Database opened\n");
+	}
+
+	sql = "SELECT * FROM MESSAGES WHERE Sender = ? and Reciever = ?";
+
+	rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0);
+	sqlite3_bind_text(stmt, 1, sender.c_str(), sender.length(), NULL);
+	sqlite3_bind_text(stmt, 2, reciever.c_str(), reciever.length(), NULL);
+	//rc = sqlite3_step(stmt);
+	
+	if (rc == SQLITE_OK) {
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+			a = std::string(reinterpret_cast <char*>(const_cast <unsigned char*> (sqlite3_column_text(stmt, 3))));
+			m.push_back(a);
+			//fprintf(stdout,"%s\n", a.c_str());
 		}
 	}
 	else {

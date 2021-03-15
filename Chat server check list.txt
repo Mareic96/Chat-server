@@ -13,4 +13,11 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
     
- // Change the sqlite read_messages function to a vector
+
+ // Ability to send a message
+ 	- Add the method to crow to send a message
+ 	- THis will be a http request
+ 	- Upload some data in the request, this will either be a put or a post request
+ 	- Use the crow json example for post request
+ // Writing a python client
+ 
