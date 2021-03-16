@@ -5,3 +5,5 @@ Debug
 Messages before alter.db
 build/
 content.text
+__pycache__/
+requests/

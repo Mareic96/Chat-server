@@ -72,6 +72,7 @@ int main(int argc, char* argv[]){
 			if(!x){
 				return crow::response(400);
 				}
+			//cout << x;
 
 			message = x["message"].s();
 
