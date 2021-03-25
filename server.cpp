@@ -4,24 +4,24 @@ using std::cin;
 #include <string>
 using std::string;
 #include <sstream>
+#include <vector>
 #include "crow_all.h"
 #include "sqliteDatabase.h"
-#include <vector>
+#include "base64.h"
 
 
 
-string login(string username, string password) {
-         bool again = true;
-         while (again == true) {
-                 cout << "Please enter your username: ";
-                 cin >> username;
-                 cout << "Please enter your password and press enter: ";
-                 cin >> password;
-                 if (login_check(username, password)) {
-                         again = false;
-                 }
-         }
-         return username;
+
+bool login(string username, string password) {
+	cout << username << "\n";
+	cout << password << "\n";
+        if (login_check(username, password)) {
+		return true;
+	}
+	else{
+		return false;
+	}	
+	
 }
 
 string writeMessages() {
@@ -42,6 +42,8 @@ string writeMessages() {
         return recieverName;
 }
 
+
+
         		
 int main(int argc, char* argv[]){
 	//string senderName = "Mareic1073";
@@ -51,8 +53,32 @@ int main(int argc, char* argv[]){
 	
 	CROW_ROUTE(app, "/")
 	([](){
-		return "<div><h1>Hello, Welcome to the chat server.</h1><div>";
+		return "<div><h1>Hello, Welcome to the chat server.<h1><div>";
 	});
+
+	CROW_ROUTE(app, "/login").methods("POST"_method)([](const crow::request& req){
+			//This is where you will decode the username
+			//Check if it exist in the database
+			string authValue = req.get_header_value("Authorization");
+			printf("%s\n",authValue.c_str());
+			int spaces = authValue.find(" ");
+			string pass = base64_decode(authValue.substr(spaces + 1), false);
+			cout << pass << "\n";
+
+			int colonLoc = pass.find(":");
+			string userName = pass.substr(0,colonLoc);
+			string passWord = pass.substr(colonLoc + 1);
+			//cout << userName << " " << passWord << "\n";
+			bool results = login_check(userName, passWord);
+			int result = (int)results;
+			printf("%d\n", results);
+			if(results == false){
+				return crow::response(401);
+					}
+			return crow::response(200);
+			});
+
+	
 
 
 	CROW_ROUTE(app, "/user/<string>")([receiverName](string senderName){

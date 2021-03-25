@@ -1,8 +1,31 @@
 import requests
+from requests.auth import HTTPBasicAuth 
+import base64
 
-url = input("Enter url: ")
+homePage = "http://127.0.0.1:18080/"
+home = requests.get(homePage)
+print(home)
 
-def readMessages():
+def login():
+    again = True;
+    loginPage = homePage + "login"
+    while(again == True):
+        username = input("Enter your username: ")
+        password = input("Enter password: ")
+        resp = requests.post(loginPage, auth=HTTPBasicAuth(username, password))
+        #print(resp.status_code)
+        if(resp.status_code == 401):
+            print("Account doesn't exist, your're not authorised to login.\n")
+            print("Please try again")
+        else:
+            print("Welcome\n");
+            again = False;
+
+     #print(resp.url)
+
+def readMessages(user):
+    url = homePage + "user/" + user
+    print(url)
     r = requests.get(url)
     jsonList = r.json()['Messages']
     
@@ -21,15 +44,14 @@ def writeMessages():
     p = requests.post("http://127.0.0.1:18080/user/Mareic1073/send_messages", json=jsonList)
     print(p.text)
 
+login()
 
-readOrWrite = input("Would you like to read all your messages? ")
+readOrWrite = input("Would you like to read or write a message? ")
 if(readOrWrite == 'Read' or readOrWrite == 'read'):
-    readMessages()
+    readMessages(username)
 elif(readOrWrite == 'Write' or readOrWrite == 'write'):
     writeMessages()
     
 
-    #payload = {'Message':['Im making a python client']}
-    #p = requests.post("http://127.0.0.1:18080/user/Mareic1073/send_messages", data=payload)
-    #print(p.text)
+
 

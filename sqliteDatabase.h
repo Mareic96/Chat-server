@@ -342,14 +342,14 @@ int store_message(std::string sender, std::string reciever, std::string content)
 	return m;
 }*/
 
-std::vector<string> read_messages(std::string sender, std::string reciever) {
+std::vector<std::string> read_messages(std::string sender, std::string reciever) {
 	sqlite3* db;
 	char* errMsg = 0;
 	int rc;
 	std::string sql;
 	sqlite3_stmt* stmt = 0;
 	std::string a;
-	std::vector<string> m;
+	std::vector<std::string> m;
 
 	rc = sqlite3_open("Messages.db", &db);
 	if (rc) {

@@ -1,53 +1,14 @@
-string writeMessages() {
-	string recieverName;
-	bool found = true;
-	char readOrWrite;
-	while (found == true) {
-		cout << "Who do you want to send the message to? ";
-		cin >> recieverName;
-		if (check(recieverName) == true) {
-			cout << "User account found\n";
-			found = false;
-		}
-		else {
-			cout << "User account not found, please try again\n";
-		}
-	}
-	
-	return recieverName;
-}
-
-string readMessages() {
-	string recieverName;
-	bool found = true;
-	char readOrWrite;
-	cout << "Whose message do you want to read? ";
-	cin >> recieverName;
-	while (found == true) {
-		if (check(recieverName) == true) {
-			cout << "User account found\n";
-			found = false;
-		}
-		else {
-			cout << "User account not found, please try again\n";
-		}
-	}
-	
-	return recieverName;
-}
-
-/*Read Receipts*/
-//Maybe write a another database function to count the amount of messages
-//The database function can take one argument, this can be just the username
-int read_receipts(senderName){
-	sqlite3* db;
-	char* errMsg = 0;
-	int rc;
-	sqlite3_stmt* stmt = 0;
-	
-	rc = sqlite3_open("Messages.db", &db);
-	//if statment to check if database opens
-	//maybe use int sqlite3_column_count(stmt); // This should return the number of columns in the result
-}
-
-//if they open their messages, tick or notify they have read what is already on the database
+Python Client:
+ - Ask the user to login with username and password
+ 	- Encode the password using basic authentication to /login only
+	- Send the encoded password to the server
+	- The server then decodes the password
+	- Then server then checks whether the decoded password and username exists
+	- Decides whether to return a 401 or a 200
+		- If 200, it will return an authentication token 
+		- JSON web tokens (bearer token)
+		- If 401 then the account doesn't exist and your not authorised
+	- Then for every request the client makes, the JSON web token must appear in the headers
+		- If the token doesn't appear, you return a 401
+		- Else print all messages
+	- You can have a token expiry policy on the server side
