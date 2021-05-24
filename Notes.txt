@@ -9,6 +9,20 @@ Python Client:
 		- JSON web tokens (bearer token)
 		- If 401 then the account doesn't exist and your not authorised
 	- Then for every request the client makes, the JSON web token must appear in the headers
+		- Use std::maps to assign token to user
+		- check if the token appears after logging in on the server
+		- The client provides the client to the server and the server checks it
+		- Make sure the user onl reads his messages
 		- If the token doesn't appear, you return a 401
+		- If the token don't match, return a 401
 		- Else print all messages
 	- You can have a token expiry policy on the server side
+	- Turn you client into classes
+
+- Most of your security considerations should be on the server side
+	- THe client is usually on the users machine, thus you can't really controll what happens
+
+Considerations:
+- Think about encrypting network and the database(Password and Message)
+- 
+- 
